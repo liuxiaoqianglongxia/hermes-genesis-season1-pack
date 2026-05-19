@@ -1,0 +1,23 @@
+project:
+  id: demo-agent-workbench
+  name: Demo Agent Workbench
+  status: planning
+  state_file: STATE.md
+  progress_file: docs/progress.md
+  knowledge_entry: knowledge/README.md
+  description: 虚构的 AI Agent 文件治理 demo 项目
+
+current_focus:
+  - 固定事实源
+  - 验证导航层
+  - 形成只读检查任务
+
+rules:
+  read_order:
+    - knowledge/README.md
+    - STATE.md
+    - docs/progress.md
+  do_not:
+    - 不把 README 当作动态事实源
+    - 不接入真实平台
+    - 不保存真实运行材料

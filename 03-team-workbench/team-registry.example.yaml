@@ -1,0 +1,49 @@
+# team-registry 示例
+# 作用：定义团队边界，避免多个团队串线。
+
+teams:
+  - id: product-team
+    name: 产品团队
+    purpose: 负责需求定义、范围收敛、验收标准
+    allowed_projects:
+      - demo-agent-workbench
+    default_roles:
+      - product-manager
+      - qa-reviewer
+    broadcast_policy: summary-only
+    notes: 只处理产品边界，不直接改代码
+
+  - id: engineering-team
+    name: 工程团队
+    purpose: 负责实现、测试、技术风险说明
+    allowed_projects:
+      - demo-agent-workbench
+    default_roles:
+      - engineer
+      - technical-reviewer
+    broadcast_policy: summary-only
+    notes: 修改前必须先说明影响范围
+
+  - id: content-team
+    name: 内容团队
+    purpose: 负责文章审稿、读者视角、表达风险
+    allowed_projects:
+      - demo-content-pipeline
+    default_roles:
+      - editor
+      - style-reviewer
+    broadcast_policy: summary-only
+    notes: 不接触工程凭据和运行数据
+
+routing_rules:
+  - when: 需求、范围、验收
+    send_to: product-team
+  - when: 代码、测试、接口
+    send_to: engineering-team
+  - when: 文章、表达、发布前检查
+    send_to: content-team
+
+safety_rules:
+  - 子代理不能跨团队读取无关项目材料
+  - 团队经验不能自动写入另一个团队
+  - 发布动作必须回到主代理确认

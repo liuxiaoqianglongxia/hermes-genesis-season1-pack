@@ -1,0 +1,36 @@
+# 项目注册表示例
+# 作用：让 AI 先知道有哪些项目，再进入对应项目目录找事实。
+
+projects:
+  - id: demo-agent-workbench
+    name: Demo Agent Workbench
+    status: active
+    owner: reader
+    root: projects/demo-agent-workbench
+    state_file: STATE.md
+    progress_file: docs/progress.md
+    description: 一个虚构的 AI Agent 文件治理示例项目
+    current_focus:
+      - 建立目录结构
+      - 固定事实源
+      - 让任务进度可追溯
+
+  - id: demo-content-pipeline
+    name: Demo Content Pipeline
+    status: planning
+    owner: reader
+    root: projects/demo-content-pipeline
+    state_file: STATE.md
+    progress_file: docs/progress.md
+    description: 一个虚构的内容生产流程示例项目
+    current_focus:
+      - 梳理角色职责
+      - 建立审稿检查清单
+
+rules:
+  current_fact_priority:
+    - project_state
+    - project_progress
+    - registry
+    - knowledge_navigation
+  archived_material_policy: 历史材料只能追溯，不能直接覆盖当前事实
