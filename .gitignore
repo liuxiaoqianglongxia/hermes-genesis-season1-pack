@@ -9,6 +9,8 @@
 *secret*
 *credential*
 *cookie*
+!token.html
+!token.md
 
 # Databases
 *.db
