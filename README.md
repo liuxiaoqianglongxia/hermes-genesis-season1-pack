@@ -64,7 +64,7 @@
 |------|-----------|
 | `QUICKSTART.md` | 10 分钟快速体验入口：先看什么、怎么打开 Dashboard Lite、怎么让 AI 做只读检查 |
 | `demo-workspace/` | 可复制的完整 demo 工作区：knowledge、projects、teams、roles、memories |
-| `dashboard-lite/` | 基于真实 Hermes Dashboard 重写的脱敏静态预览版，不连接真实后端 |
+| `dashboard-lite/` | 基于真实 Hermes Dashboard 前端迁移的脱敏静态预览版，不连接真实后端 |
 | `prompts/` | 可直接复制给 AI 的任务提示词，包含 start-here 只读检查任务 |
 | `scripts/` | 只读 demo 辅助脚本，例如 `build-demo-context.py`，不连接真实 Hermes |
 | `examples/` | demo 脚本输出样例，例如 `demo-context-output.md` |

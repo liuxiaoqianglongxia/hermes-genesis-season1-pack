@@ -102,4 +102,4 @@ https://liuxiaoqianglongxia.github.io/hermes-genesis-season1-pack/dashboard-lite
 
 ## License
 
-MIT — 来自 Hermes Dashboard 项目的一部分。
+Dashboard Lite 作为本资料包的一部分，遵循仓库根目录 LICENSE。具体使用边界见仓库根目录 LICENSE 文件。
