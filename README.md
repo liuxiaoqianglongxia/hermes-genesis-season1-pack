@@ -84,7 +84,13 @@
 
 如果你只想快速体验，先打开 **`QUICKSTART.md`**。
 
-`dashboard-lite/index.html` 可以直接浏览器打开看效果；`demo-workspace/` 可以复制后让 AI 做只读检查；`prompts/start-here-task.md` 可以直接复制给 AI；`scripts/build-demo-context.py` 是只读 demo 脚本，不连接真实 Hermes。
+`dashboard-lite/index.html` 可以直接浏览器打开看效果；在线预览地址：
+
+https://liuxiaoqianglongxia.github.io/hermes-genesis-season1-pack/dashboard-lite/
+
+也可以下载仓库后，直接用浏览器打开 `dashboard-lite/index.html`。
+
+`demo-workspace/` 可以复制后让 AI 做只读检查；`prompts/start-here-task.md` 可以直接复制给 AI；`scripts/build-demo-context.py` 是只读 demo 脚本，不连接真实 Hermes。
 
 1. **`00-start-here/README.md`** — 5 分钟了解全貌，知道先做什么。
 2. **`02-foundation-structure-facts/workspace-structure.example.md`** — 最小目录结构，复制后就能用。

@@ -45,7 +45,13 @@ cp -R demo-workspace my-agent-workspace
 
 ## 怎么打开 dashboard-lite
 
-直接用浏览器打开：
+在线预览：
+
+```text
+https://liuxiaoqianglongxia.github.io/hermes-genesis-season1-pack/dashboard-lite/
+```
+
+也可以下载仓库后，直接用浏览器打开：
 
 ```text
 dashboard-lite/index.html
