@@ -64,7 +64,7 @@
 |------|-----------|
 | `QUICKSTART.md` | 10 分钟快速体验入口：先看什么、怎么打开 Dashboard Lite、怎么让 AI 做只读检查 |
 | `demo-workspace/` | 可复制的完整 demo 工作区：knowledge、projects、teams、roles、memories |
-| `dashboard-lite/` | 可直接用浏览器打开的静态仪表盘演示，不连接真实后端 |
+| `dashboard-lite/` | 基于真实 Hermes Dashboard 重写的脱敏静态预览版，不连接真实后端 |
 | `prompts/` | 可直接复制给 AI 的任务提示词，包含 start-here 只读检查任务 |
 | `scripts/` | 只读 demo 辅助脚本，例如 `build-demo-context.py`，不连接真实 Hermes |
 | `examples/` | demo 脚本输出样例，例如 `demo-context-output.md` |
@@ -84,11 +84,11 @@
 
 如果你只想快速体验，先打开 **`QUICKSTART.md`**。
 
-`dashboard-lite/index.html` 可以直接浏览器打开看效果；在线预览地址：
+`dashboard-lite/index.html` 是基于真实 Hermes Dashboard 重写的脱敏静态预览版，可以直接浏览器打开看效果；在线预览地址：
 
 https://liuxiaoqianglongxia.github.io/hermes-genesis-season1-pack/dashboard-lite/
 
-也可以下载仓库后，直接用浏览器打开 `dashboard-lite/index.html`。
+也可以下载仓库后，直接用浏览器打开 `dashboard-lite/index.html`。它保留真实工作台的深色导航、卡片、表格、状态标签和信息密度，但不包含后端、不读取真实数据。
 
 `demo-workspace/` 可以复制后让 AI 做只读检查；`prompts/start-here-task.md` 可以直接复制给 AI；`scripts/build-demo-context.py` 是只读 demo 脚本，不连接真实 Hermes。
 

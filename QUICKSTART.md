@@ -5,7 +5,7 @@
 它是一个可阅读、可复制、可让 AI 做只读检查的 AI Agent 工作台 demo：
 
 - 用 `demo-workspace/` 看一个多团队工作台应该怎么组织事实源、团队边界、角色档案和角色记忆。
-- 用 `dashboard-lite/index.html` 直接看一个静态仪表盘长什么样。
+- 用 `dashboard-lite/index.html` 直接看一个基于真实 Hermes Dashboard 重写的脱敏静态预览版。
 - 用 `prompts/start-here-task.md` 让你常用的 AI 帮你做第一次只读检查。
 - 用 `scripts/build-demo-context.py` 体验最小版“上下文注入”：从工作区文件拼出一份任务上下文。
 
@@ -15,7 +15,7 @@
 
 如果你只想快速体验，按这个顺序来：
 
-1. 打开 `dashboard-lite/index.html`，先看工作台界面。
+1. 打开 `dashboard-lite/index.html`，先看接近真实 3102 工作台风格的脱敏静态预览。
 2. 阅读 `demo-workspace/README.md`，看 demo 工作区怎么组织。
 3. 复制 `prompts/start-here-task.md`，让 AI 对 `demo-workspace/` 做只读检查。
 4. 运行 `python scripts/build-demo-context.py`，看它如何把事实源、角色和记忆拼成任务上下文。
@@ -57,7 +57,7 @@ https://liuxiaoqianglongxia.github.io/hermes-genesis-season1-pack/dashboard-lite
 dashboard-lite/index.html
 ```
 
-它不需要安装依赖，不连接后端，不读取真实系统。
+它不需要安装依赖，不连接后端，不读取真实系统。它保留真实 Hermes Dashboard 的深色背景、顶部导航、紫色高亮、卡片、表格和状态标签，但全部数据都是 demo。
 
 所有展示数据都在：
 
@@ -65,7 +65,7 @@ dashboard-lite/index.html
 dashboard-lite/sample-data.js
 ```
 
-这只是静态演示，用来说明一个 AI Agent 工作台可以如何展示端口状态、角色、任务、技能、流水线和用量观察。
+这是基于真实 Hermes Dashboard 重写的脱敏静态预览版，用来说明一个 AI Agent 工作台可以如何展示端口状态、角色、任务、技能、流水线、用量观察和轻量记忆状态。
 
 ---
 
@@ -131,7 +131,7 @@ demo-workspace/
 4. `06-dashboard-observability/dashboard-data-flow.md`
 5. `06-dashboard-observability/what-not-to-copy.md`
 
-公开包里的 Dashboard Lite 是静态演示，不是完整后端。
+公开包里的 Dashboard Lite 是基于真实 Hermes Dashboard 重写的脱敏静态预览版，不是完整后端。
 
 真正要做自己的 Dashboard，先想清楚你有哪些可靠数据源，再考虑页面。
 
