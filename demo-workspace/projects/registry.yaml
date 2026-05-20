@@ -1,0 +1,12 @@
+version: 1
+workspace: demo-workspace
+projects:
+  - id: demo-agent-workbench
+    name: Demo Agent Workbench
+    status: active-demo
+    owner_team: product-team
+    path: ./demo-workspace/projects/demo-agent-workbench
+    fact_files:
+      - ./demo-workspace/projects/demo-agent-workbench/STATE.md
+      - ./demo-workspace/projects/demo-agent-workbench/docs/progress.md
+    description: A fictional demo project used to show how an AI Agent workbench can keep facts, teams, roles, and memories organized.

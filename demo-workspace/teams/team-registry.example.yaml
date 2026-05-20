@@ -1,0 +1,85 @@
+version: 1
+mode: demo-workspace
+source_of_truth: ./demo-workspace/teams/team-registry.example.yaml
+teams:
+  - id: product-team
+    name: Product Team
+    status: active-demo
+    kind: planning
+    scope:
+      - clarify goals
+      - define acceptance criteria
+      - prioritize work
+    related_projects:
+      - demo-agent-workbench
+    facts_boundary:
+      read:
+        - ./demo-workspace/knowledge
+        - ./demo-workspace/projects/registry.yaml
+        - ./demo-workspace/projects/demo-agent-workbench
+      write:
+        - ./demo-workspace/projects/demo-agent-workbench/STATE.md
+        - ./demo-workspace/projects/demo-agent-workbench/docs/progress.md
+    routing:
+      routing_terms:
+        - goal
+        - roadmap
+        - acceptance
+        - priority
+      default_role: product-manager
+    role_memory_map:
+      product-manager: product-manager
+
+  - id: engineering-team
+    name: Engineering Team
+    status: active-demo
+    kind: implementation
+    scope:
+      - implement small scripts
+      - maintain demo structure
+      - keep the workspace runnable
+    related_projects:
+      - demo-agent-workbench
+    facts_boundary:
+      read:
+        - ./demo-workspace/knowledge
+        - ./demo-workspace/projects/registry.yaml
+        - ./demo-workspace/projects/demo-agent-workbench
+        - ./demo-workspace/roles/engineer.md
+      write:
+        - ./demo-workspace/scripts
+        - ./demo-workspace/examples
+    routing:
+      routing_terms:
+        - script
+        - implementation
+        - runnable
+        - context
+      default_role: engineer
+    role_memory_map:
+      engineer: engineer
+
+  - id: qa-team
+    name: QA Team
+    status: active-demo
+    kind: review
+    scope:
+      - readonly audit
+      - check file completeness
+      - verify acceptance criteria
+    related_projects:
+      - demo-agent-workbench
+    facts_boundary:
+      read:
+        - ./demo-workspace
+      write:
+        - ./demo-workspace/projects/demo-agent-workbench/docs/progress.md
+    routing:
+      routing_terms:
+        - review
+        - audit
+        - check
+        - verify
+      default_role: qa-reviewer
+    role_memory_map:
+      qa-reviewer: qa-reviewer

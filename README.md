@@ -62,6 +62,12 @@
 
 | 目录 | 里面有什么 |
 |------|-----------|
+| `QUICKSTART.md` | 10 分钟快速体验入口：先看什么、怎么打开 Dashboard Lite、怎么让 AI 做只读检查 |
+| `demo-workspace/` | 可复制的完整 demo 工作区：knowledge、projects、teams、roles、memories |
+| `dashboard-lite/` | 可直接用浏览器打开的静态仪表盘演示，不连接真实后端 |
+| `prompts/` | 可直接复制给 AI 的任务提示词，包含 start-here 只读检查任务 |
+| `scripts/` | 只读 demo 辅助脚本，例如 `build-demo-context.py`，不连接真实 Hermes |
+| `examples/` | demo 脚本输出样例，例如 `demo-context-output.md` |
 | `00-start-here/` | 资料包说明、使用建议、边界声明 |
 | `01-season-roadmap/` | 第一季 15 篇文章的路线图、每篇对应交付材料、三条复制路线 |
 | `02-foundation-structure-facts/` | 目录结构规范、STATE 模板、progress 模板、项目 registry 示例、术语表 |
@@ -75,6 +81,10 @@
 | `10-faq/` | 常见问题、如何改成自己的项目、不承诺事项 |
 
 ## 先看哪三个文件
+
+如果你只想快速体验，先打开 **`QUICKSTART.md`**。
+
+`dashboard-lite/index.html` 可以直接浏览器打开看效果；`demo-workspace/` 可以复制后让 AI 做只读检查；`prompts/start-here-task.md` 可以直接复制给 AI；`scripts/build-demo-context.py` 是只读 demo 脚本，不连接真实 Hermes。
 
 1. **`00-start-here/README.md`** — 5 分钟了解全貌，知道先做什么。
 2. **`02-foundation-structure-facts/workspace-structure.example.md`** — 最小目录结构，复制后就能用。
@@ -108,11 +118,7 @@
 
 这个资料包完全公开，免费下载。
 
-如果对你有帮助，欢迎 Star 支持。
-
-公众号「麦尖AI」还在持续更新，关注不迷路。
-
-赞赏只是自愿支持创作，和资料领取不绑定。
+如果这个仓库对你有帮助，欢迎点 Star、转发给朋友，或关注公众号「麦尖AI」。赞赏只是自愿支持创作，不和资料获取绑定。
 
 ---
 

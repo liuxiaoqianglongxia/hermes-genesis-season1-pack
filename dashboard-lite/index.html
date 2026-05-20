@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Lite - AI Agent Workbench Demo</title>
+  <style>
+    :root{--bg:#0f172a;--panel:rgba(15,23,42,.72);--card:rgba(30,41,59,.72);--border:rgba(148,163,184,.18);--text:#e5e7eb;--muted:#94a3b8;--green:#34d399;--amber:#fbbf24;--red:#fb7185;--violet:#8b5cf6;--blue:#38bdf8}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:radial-gradient(circle at top left,rgba(99,102,241,.28),transparent 32%),linear-gradient(135deg,#0f172a,#111827 52%,#020617);color:var(--text);min-height:100vh} .shell{max-width:1180px;margin:0 auto;padding:32px 18px 56px}.hero{border:1px solid var(--border);background:linear-gradient(135deg,rgba(30,41,59,.86),rgba(15,23,42,.72));border-radius:24px;padding:26px;box-shadow:0 24px 70px rgba(2,6,23,.42)}.eyebrow{display:inline-flex;gap:8px;align-items:center;color:#c4b5fd;background:rgba(139,92,246,.14);border:1px solid rgba(139,92,246,.28);padding:7px 12px;border-radius:999px;font-size:13px}.hero h1{font-size:34px;line-height:1.15;margin:18px 0 10px}.hero p{color:var(--muted);line-height:1.7;margin:0}.banner{margin-top:16px;padding:12px 14px;border-radius:14px;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.1);color:#fde68a}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.section{border:1px solid var(--border);background:var(--panel);border-radius:20px;padding:18px;backdrop-filter:blur(14px);box-shadow:0 18px 42px rgba(2,6,23,.28)}.section h2{font-size:17px;margin:0 0 14px;display:flex;justify-content:space-between;gap:10px}.span-2{grid-column:span 2}.full{grid-column:1/-1}.list{display:flex;flex-direction:column;gap:10px}.item{border:1px solid rgba(148,163,184,.13);background:rgba(30,41,59,.52);border-radius:14px;padding:12px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.name{font-weight:700}.meta{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.45}.pill{font-size:12px;border-radius:999px;padding:4px 9px;border:1px solid var(--border);color:#cbd5e1}.online,.ready,.active,.PASS{color:var(--green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}.offline,.paused{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.1)}.reviewing{color:var(--blue);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{background:rgba(30,41,59,.56);border:1px solid rgba(148,163,184,.13);border-radius:16px;padding:16px;text-align:center}.metric strong{display:block;font-size:28px}.metric span{display:block;color:var(--muted);font-size:12px;margin-top:5px}.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.step{position:relative;padding:13px;border-radius:14px;background:rgba(99,102,241,.1);border:1px solid rgba(139,92,246,.22);min-height:72px;font-size:13px;line-height:1.4}.step b{display:block;color:#c4b5fd;margin-bottom:5px}.footer{color:var(--muted);font-size:13px;margin-top:18px;text-align:center}@media(max-width:900px){.grid{grid-template-columns:1fr}.span-2{grid-column:auto}.metric-grid{grid-template-columns:repeat(2,1fr)}.timeline{grid-template-columns:1fr 1fr}}@media(max-width:520px){.metric-grid,.timeline{grid-template-columns:1fr}.hero h1{font-size:26px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">Dashboard Lite · Static Demo</span>
+      <h1>AI Agent Workbench：一个 AI 管多个团队的静态工作台演示</h1>
+      <p>工作区：<strong id="workspaceName">demo-agent-workbench</strong>。这个页面用虚构数据展示端口、角色、定时任务、技能、流水线和用量观察。</p>
+      <div class="banner">这是静态演示，不是完整 Hermes Dashboard 后端。页面不连接真实后端，不读取真实日志，不上传任何数据。</div>
+    </section>
+
+    <section class="grid">
+      <div class="section" id="ports"><h2>端口状态 <span class="pill">demo</span></h2><div class="list"></div></div>
+      <div class="section span-2" id="agents"><h2>Agent / 角色 <span class="pill">3 roles</span></h2><div class="list"></div></div>
+      <div class="section" id="cron"><h2>定时任务 <span class="pill">sample</span></h2><div class="list"></div></div>
+      <div class="section" id="skills"><h2>技能 <span class="pill">lite</span></h2><div class="list"></div></div>
+      <div class="section" id="memory"><h2>Memory Status <span class="pill">light</span></h2><div class="list"></div></div>
+      <div class="section full" id="pipeline"><h2>流水线 <span class="pill">request → report</span></h2><div class="timeline"></div></div>
+      <div class="section full" id="usage"><h2>用量观察 <span class="pill">fictional</span></h2><div class="metric-grid"></div></div>
+    </section>
+    <div class="footer" id="updatedAt"></div>
+  </main>
+  <script src="./sample-data.js"></script>
+  <script>
+    const data = window.DASHBOARD_SAMPLE_DATA;
+    const cls = value => String(value || '').replace(/[^a-zA-Z0-9_-]/g,'');
+    document.getElementById('workspaceName').textContent = data.workspace;
+    document.getElementById('updatedAt').textContent = 'Sample data updated at: ' + data.updatedAt;
+    function item(title, status, meta){return `<div class="item"><div class="row"><span class="name">${title}</span><span class="pill ${cls(status)}">${status}</span></div><div class="meta">${meta}</div></div>`}
+    document.querySelector('#ports .list').innerHTML = data.ports.map(p=>item(`${p.name} · ${p.port}`, p.status, p.note)).join('');
+    document.querySelector('#agents .list').innerHTML = data.agents.map(a=>item(`${a.id} · ${a.team}`, a.status, `${a.currentTask} · memory files: ${a.memoryFiles}`)).join('');
+    document.querySelector('#cron .list').innerHTML = data.cronJobs.map(j=>item(j.name, j.status, `${j.schedule} · last result: ${j.lastResult}`)).join('');
+    document.querySelector('#skills .list').innerHTML = data.skills.map(s=>item(s.name, s.status, s.use)).join('');
+    document.querySelector('#memory .list').innerHTML = item('role profiles', data.memory.roleProfiles, 'demo role files') + item('memory logs', data.memory.memoryLogs, data.memory.latestNote);
+    document.querySelector('#pipeline .timeline').innerHTML = data.pipeline.map((s,i)=>`<div class="step"><b>Step ${i+1}</b>${s}</div>`).join('');
+    document.querySelector('#usage .metric-grid').innerHTML = Object.entries(data.usage).map(([k,v])=>`<div class="metric"><strong>${v}</strong><span>${k}</span></div>`).join('');
+  </script>
+</body>
+</html>
