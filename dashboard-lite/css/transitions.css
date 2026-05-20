@@ -1,0 +1,274 @@
+/* ========================================
+   Hermes Dashboard - 页面过渡动画
+   用于消除页面跳转白屏闪烁，提供丝滑体验
+   ======================================== */
+
+/* ==================== 页面内容淡入 ==================== */
+
+/* 页面主体内容包装器 - 所有页面的 .container 内的内容 */
+.page-content {
+    animation: pageFadeIn 0.3s ease-out both;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== 导航项点击反馈 ==================== */
+
+.nav-item:active {
+    transform: scale(0.96);
+}
+
+/* ==================== 卡片/模块交错进入动画 ==================== */
+
+/* 统计卡片 - 交错延迟 */
+.stats-grid .stat-card {
+    opacity: 0;
+    animation: cardSlideUp 0.4s ease-out both;
+}
+
+.stats-grid .stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stats-grid .stat-card:nth-child(2) { animation-delay: 0.10s; }
+.stats-grid .stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stats-grid .stat-card:nth-child(4) { animation-delay: 0.20s; }
+.stats-grid .stat-card:nth-child(5) { animation-delay: 0.25s; }
+.stats-grid .stat-card:nth-child(6) { animation-delay: 0.30s; }
+
+@keyframes cardSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 普通卡片网格 - 交错延迟 */
+.cards-grid .card {
+    opacity: 0;
+    animation: cardSlideUp 0.4s ease-out both;
+}
+
+.cards-grid .card:nth-child(1) { animation-delay: 0.08s; }
+.cards-grid .card:nth-child(2) { animation-delay: 0.14s; }
+.cards-grid .card:nth-child(3) { animation-delay: 0.20s; }
+.cards-grid .card:nth-child(4) { animation-delay: 0.26s; }
+.cards-grid .card:nth-child(5) { animation-delay: 0.32s; }
+.cards-grid .card:nth-child(6) { animation-delay: 0.38s; }
+
+/* ==================== Section 淡入 ==================== */
+
+.section {
+    opacity: 0;
+    animation: sectionFadeIn 0.5s ease-out both;
+}
+
+.section:nth-child(1) { animation-delay: 0.10s; }
+.section:nth-child(2) { animation-delay: 0.18s; }
+.section:nth-child(3) { animation-delay: 0.26s; }
+.section:nth-child(4) { animation-delay: 0.34s; }
+
+@keyframes sectionFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== Header 淡入 ==================== */
+
+.header {
+    animation: headerFadeIn 0.35s ease-out both;
+}
+
+@keyframes headerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== 表格行淡入 ==================== */
+
+table tbody tr {
+    opacity: 0;
+    animation: rowFadeIn 0.3s ease-out both;
+}
+
+table tbody tr:nth-child(1)  { animation-delay: 0.05s; }
+table tbody tr:nth-child(2)  { animation-delay: 0.08s; }
+table tbody tr:nth-child(3)  { animation-delay: 0.11s; }
+table tbody tr:nth-child(4)  { animation-delay: 0.14s; }
+table tbody tr:nth-child(5)  { animation-delay: 0.17s; }
+table tbody tr:nth-child(6)  { animation-delay: 0.20s; }
+table tbody tr:nth-child(7)  { animation-delay: 0.23s; }
+table tbody tr:nth-child(8)  { animation-delay: 0.26s; }
+table tbody tr:nth-child(9)  { animation-delay: 0.29s; }
+table tbody tr:nth-child(10) { animation-delay: 0.32s; }
+
+@keyframes rowFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==================== 列表项淡入 ==================== */
+
+.list-item,
+.alert-item,
+.service-card {
+    opacity: 0;
+    animation: listItemFadeIn 0.3s ease-out both;
+}
+
+.list-item:nth-child(1),
+.alert-item:nth-child(1),
+.service-card:nth-child(1) { animation-delay: 0.05s; }
+.list-item:nth-child(2),
+.alert-item:nth-child(2),
+.service-card:nth-child(2) { animation-delay: 0.09s; }
+.list-item:nth-child(3),
+.alert-item:nth-child(3),
+.service-card:nth-child(3) { animation-delay: 0.13s; }
+.list-item:nth-child(4),
+.alert-item:nth-child(4),
+.service-card:nth-child(4) { animation-delay: 0.17s; }
+.list-item:nth-child(5),
+.alert-item:nth-child(5),
+.service-card:nth-child(5) { animation-delay: 0.21s; }
+
+@keyframes listItemFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==================== 网格布局通用淡入 ==================== */
+
+.services-grid > *,
+.alerts-container > *,
+.dashboard-grid > *,
+.terminal-container > *,
+.alerts-main > *,
+.alerts-sidebar > * {
+    opacity: 0;
+    animation: gridFadeIn 0.4s ease-out both;
+}
+
+.services-grid > *:nth-child(1),
+.dashboard-grid > *:nth-child(1),
+.terminal-container > *:nth-child(1) { animation-delay: 0.06s; }
+.services-grid > *:nth-child(2),
+.dashboard-grid > *:nth-child(2),
+.terminal-container > *:nth-child(2) { animation-delay: 0.12s; }
+.services-grid > *:nth-child(3) { animation-delay: 0.18s; }
+.services-grid > *:nth-child(4) { animation-delay: 0.24s; }
+.services-grid > *:nth-child(5) { animation-delay: 0.30s; }
+.services-grid > *:nth-child(6) { animation-delay: 0.36s; }
+
+@keyframes gridFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ==================== 按钮点击波纹反馈 ==================== */
+
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+.btn:active::after {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+    transition: 0s;
+}
+
+/* ==================== 状态徽章脉冲 ==================== */
+
+.status-badge .dot {
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+/* ==================== 加载状态动画 ==================== */
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ==================== 减少动画偏好 ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

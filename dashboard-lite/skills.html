@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技能中心 - Hermes Dashboard Lite (Demo)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/transitions.css">
+    <style>
+        html, body { margin: 0; padding: 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; }
+        .top-navbar { background: rgba(15, 23, 42, 0.95); }
+        .nav-item.active { color: #ffffff !important; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+
+        .stats-summary { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 16px; margin-bottom: 30px; }
+        .summary-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 20px; text-align: center; transition: all 0.2s; }
+        .summary-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .summary-card.active { border-color: var(--accent-green); background: rgba(16, 185, 129, 0.05); }
+        .summary-card.paused { border-color: var(--accent-orange); background: rgba(245, 158, 11, 0.05); }
+        .summary-card.success { border-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
+        .summary-value { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .summary-label { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .skills-main-layout { display: flex; gap: 24px; align-items: flex-start; }
+        .skills-sidebar { width: 200px; flex-shrink: 0; position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
+        .skills-sidebar::-webkit-scrollbar { width: 4px; }
+        .skills-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .skills-sidebar-title { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 12px; }
+        .skills-nav-list { list-style: none; margin: 0; padding: 0; }
+        .skills-nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 8px; cursor: pointer; transition: background 0.15s; margin-bottom: 1px; }
+        .skills-nav-item:hover { background: rgba(255,255,255,0.04); }
+        .skills-nav-item.active { background: rgba(251,191,36,0.1); }
+        .skills-nav-item .nav-icon { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+        .skills-nav-item .nav-label { font-size: 13px; color: #cbd5e1; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .skills-nav-item.active .nav-label { color: #f8fafc; font-weight: 500; }
+        .skills-nav-item .nav-count { font-size: 11px; color: rgba(251,191,36,0.4); flex-shrink: 0; }
+        .skills-nav-item.active .nav-count { color: rgba(251,191,36,0.7); }
+        .skills-content { flex: 1; min-width: 0; }
+        .skills-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+        .skill-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .skill-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .skill-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+        .skill-card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .skill-card-icon.cat-ai-agent { background: rgba(139,92,246,0.15); }
+        .skill-card-icon.cat-devops { background: rgba(251,146,60,0.15); }
+        .skill-card-icon.cat-data-science { background: rgba(56,189,248,0.15); }
+        .skill-card-icon.cat-web-development { background: rgba(52,211,153,0.15); }
+        .skill-card-icon.cat-research { background: rgba(251,191,36,0.15); }
+        .skill-card-icon.cat-productivity { background: rgba(74,222,128,0.15); }
+        .skill-card-icon.cat-creative { background: rgba(244,114,182,0.15); }
+        .skill-card-icon.cat-software-development { background: rgba(99,102,241,0.15); }
+        .skill-card-status { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.3px; }
+        .skill-card-status.built-in { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+        .skill-card-status.optional { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+        .skill-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0 0 4px; line-height: 1.3; }
+        .skill-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .skill-card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .skill-card-tag { font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.06); color: #94a3b8; }
+        .skill-card-tag.tag-category { background: rgba(99,102,241,0.12); color: #818cf8; }
+
+        @media (max-width: 1024px) { .skills-card-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .skills-main-layout { flex-direction: column; } .skills-sidebar { width: 100%; position: static; max-height: none; display: flex; overflow-x: auto; gap: 4px; padding-bottom: 6px; } .skills-sidebar-title { display: none; } .skills-nav-list { display: flex; gap: 4px; } .skills-nav-item { white-space: nowrap; padding: 5px 10px; } .skills-card-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon">🚀</span><span class="logo-text">Hermes</span><span class="version">v3.0 · public demo</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-item"><span class="icon">&#x1F5A5;</span><span>端口状态</span></a>
+                <a href="agents.html" class="nav-item"><span class="icon">&#x1F916;</span><span>Agent</span></a>
+                <a href="tasks.html" class="nav-item"><span class="icon">&#x23F0;</span><span>定时任务</span></a>
+                <a href="skills.html" class="nav-item active"><span class="icon">&#x26A1;</span><span>技能</span></a>
+                <a href="pipeline.html" class="nav-item"><span class="icon">&#x1F9ED;</span><span>流水线</span></a>
+                <a href="token.html" class="nav-item"><span class="icon">&#x1FA99;</span><span>Token</span></a>
+                <a href="memory.html" class="nav-item"><span class="icon">&#x1F9E0;</span><span>记忆图谱</span></a>
+            </div>
+            <div class="navbar-actions">
+                <button class="search-trigger" onclick="alert('🔒 Demo 模式')"><span>🔍</span><span>搜索...</span><kbd>⌘K</kbd></button>
+                <button class="bookmark-btn" onclick="toggleBookmark()" title="收藏页面">⭐</button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        <header class="header">
+            <h1>技能中心</h1>
+            <p class="subtitle" id="skillsSubtitle">- 个技能 · 内置 - · 可选 -</p>
+        </header>
+
+        <div class="stats-summary" id="skillsStats"></div>
+
+        <section class="section">
+            <div class="skills-main-layout">
+                <aside class="skills-sidebar" id="skillsSidebar"></aside>
+                <main class="skills-content" id="skillsContent"></main>
+            </div>
+        </section>
+    </div>
+
+    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
+
+    <script src="sample-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

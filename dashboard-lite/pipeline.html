@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会话流水线 - Hermes Dashboard Lite (Demo)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        html, body { margin: 0; padding: 0; background: linear-gradient(135deg, #0f172a 0%, #111827 100%); min-height: 100vh; }
+        .top-navbar { background: rgba(15, 23, 42, 0.95); }
+        .nav-item.active { color: #ffffff !important; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+
+        .page-shell { max-width: 1680px; margin: 0 auto; padding: 76px 24px 32px; }
+        .header { display: block; margin-bottom: 16px; text-align: center; }
+        .header h1 { margin: 0 0 8px; font-size: 2rem; font-weight: 700; letter-spacing: 0.3px; }
+        .header .subtitle { margin: 0 auto; color: var(--text-secondary, #94a3b8); max-width: 820px; line-height: 1.6; text-align: center; display: block; }
+
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 22px; }
+        .metric-card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; backdrop-filter: blur(10px); box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28); padding: 18px 18px 16px; }
+        .metric-label { color: var(--text-secondary, #94a3b8); font-size: 0.82rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .metric-value { font-size: 1.75rem; font-weight: 700; margin-bottom: 6px; }
+
+        .main-grid { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 18px; align-items: start; }
+        .panel { padding: 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; backdrop-filter: blur(10px); box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28); }
+        .panel-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .panel-title h2, .panel-title h3 { margin: 0; font-size: 1rem; }
+
+        .session-list { display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 270px); overflow-y: auto; padding-right: 4px; }
+        .session-card { padding: 14px; border-radius: 16px; background: rgba(30, 41, 59, 0.52); border: 1px solid rgba(148, 163, 184, 0.14); cursor: pointer; transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease; }
+        .session-card:hover { transform: translateY(-1px); border-color: rgba(99, 102, 241, 0.45); box-shadow: 0 10px 24px rgba(30, 41, 59, 0.32); }
+        .session-card.active { border-color: rgba(99, 102, 241, 0.9); background: rgba(49, 46, 129, 0.28); box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.45) inset; }
+        .session-user-msg { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; line-height: 1.45; color: #e2e8f0; }
+        .session-preview { color: #cbd5e1; font-size: 0.84rem; line-height: 1.55; margin-bottom: 10px; }
+        .meta-row, .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+        .meta-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; line-height: 1; white-space: nowrap; background: rgba(51, 65, 85, 0.72); color: #cbd5e1; }
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; line-height: 1; white-space: nowrap; }
+        .badge.route { background: rgba(99, 102, 241, 0.18); color: #c7d2fe; }
+        .badge.delegate { background: rgba(14, 165, 233, 0.18); color: #bae6fd; }
+        .badge.broadcast { background: rgba(34, 197, 94, 0.18); color: #bbf7d0; }
+        .badge.trace { background: rgba(168, 85, 247, 0.18); color: #e9d5ff; }
+
+        .detail-scroll { display: flex; flex-direction: column; gap: 16px; }
+        .detail-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+        .summary-block { padding: 14px; border-radius: 14px; background: rgba(30, 41, 59, 0.48); border: 1px solid rgba(148, 163, 184, 0.14); }
+        .summary-block .label { color: var(--text-secondary, #94a3b8); font-size: 0.78rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .summary-block .value { font-size: 1.05rem; font-weight: 700; line-height: 1.45; word-break: break-word; }
+        .detail-section { padding: 16px; border-radius: 16px; background: rgba(30, 41, 59, 0.48); border: 1px solid rgba(148, 163, 184, 0.14); }
+        .detail-section h3 { margin: 0 0 12px; font-size: 0.96rem; }
+        .timeline { position: relative; display: flex; flex-direction: column; gap: 12px; }
+        .timeline-item { position: relative; padding: 14px 14px 14px 18px; border-left: 3px solid rgba(99, 102, 241, 0.42); background: rgba(15, 23, 42, 0.58); border-radius: 0 14px 14px 0; }
+        .timeline-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+        .timeline-label { font-weight: 700; font-size: 0.9rem; }
+        .timeline-time { color: var(--text-secondary, #94a3b8); font-size: 0.78rem; white-space: nowrap; }
+        .timeline-summary { color: #cbd5e1; font-size: 0.85rem; line-height: 1.55; }
+
+        @media (max-width: 1180px) { .main-grid { grid-template-columns: 1fr; } .session-list { max-height: none; } }
+        @media (max-width: 768px) { .page-shell { padding: 94px 14px 20px; } }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon">🚀</span><span class="logo-text">Hermes</span><span class="version">v3.0 · public demo</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-item"><span class="icon">&#x1F5A5;</span><span>端口状态</span></a>
+                <a href="agents.html" class="nav-item"><span class="icon">&#x1F916;</span><span>Agent</span></a>
+                <a href="tasks.html" class="nav-item"><span class="icon">&#x23F0;</span><span>定时任务</span></a>
+                <a href="skills.html" class="nav-item"><span class="icon">&#x26A1;</span><span>技能</span></a>
+                <a href="pipeline.html" class="nav-item active"><span class="icon">&#x1F9ED;</span><span>流水线</span></a>
+                <a href="token.html" class="nav-item"><span class="icon">&#x1FA99;</span><span>Token</span></a>
+                <a href="memory.html" class="nav-item"><span class="icon">&#x1F9E0;</span><span>记忆图谱</span></a>
+            </div>
+            <div class="navbar-actions">
+                <button class="search-trigger" onclick="alert('🔒 Demo 模式')"><span>🔍</span><span>搜索...</span><kbd>⌘K</kbd></button>
+                <button class="bookmark-btn" onclick="toggleBookmark()" title="收藏页面">⭐</button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-shell">
+        <header class="header">
+            <h1>会话流水线</h1>
+            <p class="subtitle">子代理会话追踪 · 工具调用 · 时间线</p>
+        </header>
+
+        <div class="overview-grid" id="pipelineOverview"></div>
+
+        <div class="main-grid">
+            <div class="panel">
+                <div class="panel-title"><h3>会话列表</h3></div>
+                <div class="session-list" id="sessionList"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title"><h3>会话详情</h3></div>
+                <div id="sessionDetail"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
+
+    <script src="sample-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

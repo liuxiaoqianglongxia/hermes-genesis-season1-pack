@@ -1,0 +1,471 @@
+/* ========================================
+   Hermes Dashboard - 响应式优化样式
+   Phase 4 - UI 优化和性能提升
+   
+   断点设计：
+   - 移动端：< 768px
+   - 平板端：768px - 1024px
+   - 桌面端：> 1024px
+   - 大屏：> 1440px
+   ======================================== */
+
+/* ==================== 基础响应式 ==================== */
+
+/* 移动端优先 */
+@media (max-width: 767px) {
+    /* 容器调整 */
+    .container {
+        padding: 16px;
+    }
+    
+    /* 导航栏调整 */
+    .navbar-container {
+        padding: 0 12px;
+    }
+    
+    .navbar-brand .logo-text {
+        display: none;
+    }
+    
+    .navbar-brand .version {
+        display: none;
+    }
+    
+    /* 搜索按钮简化 */
+    .search-trigger span:not(.icon) {
+        display: none;
+    }
+    
+    .search-trigger kbd {
+        display: none;
+    }
+    
+    /* 隐藏书签按钮 */
+    .bookmark-btn {
+        display: none;
+    }
+    
+    /* 面包屑简化 */
+    .breadcrumb-nav {
+        padding: 12px 16px;
+    }
+    
+    .breadcrumb-item:not(.current):not(:first-child) {
+        display: none;
+    }
+    
+    /* 统计卡片网格 */
+    .stats-grid,
+    .today-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .stat-card .value {
+        font-size: 1.8rem;
+    }
+    
+    /* 卡片网格 */
+    .cards-grid,
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    /* 图表网格 */
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-card {
+        height: 250px;
+    }
+    
+    /* 表格滚动 */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    /* 按钮调整 */
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-sm {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    /* 操作按钮组 */
+    .card-actions,
+    .actions-grid {
+        flex-direction: column;
+    }
+    
+    .card-actions .btn,
+    .actions-grid .btn {
+        width: 100%;
+    }
+    
+    /* Toast 通知位置 */
+    .toast-container {
+        right: 10px;
+        left: 10px;
+        top: 70px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: none;
+    }
+    
+    /* 模态框调整 */
+    .modal-content {
+        max-width: 95% !important;
+        margin: 10px;
+        max-height: 95vh;
+    }
+    
+    /* 搜索模态框 */
+    .search-modal {
+        padding-top: 60px;
+    }
+    
+    .search-modal-content {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+    
+    /* 骨架屏调整 */
+    .skeleton-dashboard .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==================== 平板端优化 ==================== */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        padding: 24px;
+    }
+    
+    /* 导航栏调整 */
+    .navbar-brand .logo-text {
+        display: inline;
+    }
+    
+    .navbar-brand .version {
+        display: none;
+    }
+    
+    /* 统计卡片 */
+    .stats-grid,
+    .today-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    /* 卡片网格 */
+    .cards-grid,
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* 图表网格 */
+    .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* 隐藏部分导航项文字 */
+    .nav-item span:not(.icon) {
+        display: none;
+    }
+    
+    .nav-item {
+        padding: 10px;
+    }
+}
+
+/* ==================== 桌面端优化 ==================== */
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    /* 统计卡片 */
+    .stats-grid,
+    .today-summary {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    /* 卡片网格 */
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* 图表网格 */
+    .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==================== 大屏优化 ==================== */
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    /* 统计卡片 */
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    /* 卡片网格 */
+    .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    /* 图表网格 */
+    .charts-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .chart-card {
+        height: 300px;
+    }
+}
+
+/* ==================== 触摸优化 ==================== */
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 增大点击区域 */
+    .btn,
+    .nav-item,
+    .action-btn,
+    .search-item {
+        min-height: 44px;
+    }
+    
+    /* 移除 hover 效果 */
+    .card:hover,
+    .stat-card:hover,
+    .nav-item:hover {
+        transform: none;
+    }
+    
+    /* 增大表单控件 */
+    input,
+    select,
+    textarea {
+        font-size: 16px; /* 防止 iOS 缩放 */
+    }
+    
+    /* 触摸反馈 */
+    .btn:active,
+    .action-btn:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ==================== 横屏优化 ==================== */
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .top-navbar {
+        height: 56px;
+    }
+    
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .breadcrumb-nav {
+        padding: 8px 20px;
+    }
+    
+    /* 减少内容间距 */
+    .section {
+        margin-bottom: 20px;
+    }
+    
+    .chart-card {
+        height: 200px;
+    }
+}
+
+/* ==================== 打印样式 ==================== */
+
+@media print {
+    /* 隐藏导航和操作元素 */
+    .top-navbar,
+    .breadcrumb-nav,
+    .navbar-actions,
+    .btn,
+    .action-btn,
+    .search-modal,
+    .toast-container,
+    .bookmark-panel {
+        display: none !important;
+    }
+    
+    /* 调整背景 */
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    /* 卡片样式 */
+    .card,
+    .stat-card {
+        break-inside: avoid;
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+    
+    /* 图表打印 */
+    .chart-card {
+        break-inside: avoid;
+    }
+}
+
+/* ==================== 高对比度模式 ==================== */
+
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #fff;
+        --text-secondary: #ccc;
+    }
+    
+    .card,
+    .stat-card {
+        border-width: 2px;
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* ==================== 减少动画 ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .skeleton-card,
+    .skeleton-text,
+    .skeleton-avatar {
+        animation: none;
+        background: var(--bg-tertiary);
+    }
+}
+
+/* ==================== 深色模式支持 ==================== */
+
+@media (prefers-color-scheme: dark) {
+    /* 已经使用深色主题，无需额外调整 */
+}
+
+/* Light mode disabled - Dashboard is dark-only by design */
+/* @media (prefers-color-scheme: light) { ... } */
+
+/* ==================== 辅助功能 ==================== */
+
+/* 焦点可见性 */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* 跳过导航链接 */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    z-index: 10000;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* 屏幕阅读器专用 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==================== Skills 页面响应式 ==================== */
+
+/* 技能页面 - 移动端 */
+@media (max-width: 767px) {
+    .category-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .skills-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .skills-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .skills-filter-bar .search-wrapper {
+        min-width: 100%;
+    }
+    
+    .filter-chips {
+        justify-content: center;
+    }
+}
+
+/* 技能页面 - 平板端 */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .skills-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

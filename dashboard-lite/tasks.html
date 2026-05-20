@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定时任务 - Hermes Dashboard Lite (Demo)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/transitions.css">
+    <style>
+        html, body { margin: 0; padding: 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; }
+        .top-navbar { background: rgba(15, 23, 42, 0.95); }
+        .nav-item.active { color: #ffffff !important; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+
+        .tasks-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .task-stat { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; padding: 22px 16px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .task-stat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0; transition: opacity 0.3s; }
+        .task-stat:hover { transform: translateY(-3px); border-color: rgba(99, 102, 241, 0.3); }
+        .task-stat:hover::before { opacity: 1; }
+        .task-stat-value { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #e2e8f0, #f8fafc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+        .task-stat-value.accent-green { background: linear-gradient(135deg, #34d399, #6ee7b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .task-stat-value.accent-orange { background: linear-gradient(135deg, #fbbf24, #fcd34d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .task-stat-value.accent-red { background: linear-gradient(135deg, #f87171, #fca5a5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .task-stat-label { font-size: 0.78rem; color: #94a3b8; margin-top: 6px; letter-spacing: 0.3px; }
+        @media (max-width: 768px) { .tasks-summary { grid-template-columns: repeat(2, 1fr); } }
+
+        .tasks-table-wrapper { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; margin-bottom: var(--spacing-lg); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        .tasks-table { width: 100%; border-collapse: collapse; }
+        .tasks-table thead th { background: rgba(51, 65, 85, 0.5); padding: 14px 18px; text-align: left; font-size: 0.72rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+        .tasks-table tbody tr { cursor: pointer; transition: all 0.25s ease; position: relative; }
+        .tasks-table tbody tr:hover { background: rgba(99, 102, 241, 0.08); }
+        .tasks-table tbody td { padding: 15px 18px; font-size: 0.88rem; vertical-align: middle; color: #e2e8f0; }
+        .tasks-table .row-index { width: 48px; text-align: center; color: #475569; font-size: 0.75rem; font-weight: 600; font-family: 'Fira Code', monospace; }
+        .tasks-table .task-name { font-weight: 600; color: #f1f5f9; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tasks-table .task-schedule { font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #c4b5fd; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 4px 10px; border-radius: 6px; display: inline-block; }
+        .tasks-table .task-freq { color: #e2e8f0; font-size: 0.85rem; }
+        .tasks-table .task-time { color: #94a3b8; font-size: 0.85rem; white-space: nowrap; }
+        .tasks-table .task-status { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+        .status-running { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-ok { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-paused { background: rgba(245, 158, 11, 0.12); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-failed { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .status-dot.running, .status-dot.ok { background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.6); }
+        .status-dot.paused { background: #fbbf24; box-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+        .status-dot.failed { background: #f87171; box-shadow: 0 0 8px rgba(248, 113, 113, 0.6); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-content { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; max-width: 720px; width: 92%; max-height: 85vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 22px 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+        .modal-header h2 { font-size: 1.15rem; color: #f1f5f9; margin: 0; font-weight: 700; }
+        .modal-close { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; font-size: 1.4rem; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 10px; transition: all 0.2s; }
+        .modal-close:hover { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+        .modal-body { padding: 22px 26px; }
+        .detail-section { margin-bottom: 22px; }
+        .detail-section h3 { font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; font-weight: 600; }
+        .detail-table { width: 100%; border-collapse: collapse; }
+        .detail-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 0.88rem; }
+        .detail-table td:first-child { color: #64748b; width: 130px; font-weight: 500; }
+        .detail-table td:last-child { color: #e2e8f0; font-weight: 500; }
+        .detail-table code { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 3px 8px; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #c4b5fd; }
+        .code-block { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; font-family: 'Fira Code', monospace; font-size: 0.82rem; color: #e2e8f0; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; }
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge-error { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon">🚀</span><span class="logo-text">Hermes</span><span class="version">v3.0 · public demo</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-item"><span class="icon">&#x1F5A5;</span><span>端口状态</span></a>
+                <a href="agents.html" class="nav-item"><span class="icon">&#x1F916;</span><span>Agent</span></a>
+                <a href="tasks.html" class="nav-item active"><span class="icon">&#x23F0;</span><span>定时任务</span></a>
+                <a href="skills.html" class="nav-item"><span class="icon">&#x26A1;</span><span>技能</span></a>
+                <a href="pipeline.html" class="nav-item"><span class="icon">&#x1F9ED;</span><span>流水线</span></a>
+                <a href="token.html" class="nav-item"><span class="icon">&#x1FA99;</span><span>Token</span></a>
+                <a href="memory.html" class="nav-item"><span class="icon">&#x1F9E0;</span><span>记忆图谱</span></a>
+            </div>
+            <div class="navbar-actions">
+                <button class="search-trigger" onclick="alert('🔒 Demo 模式')"><span>🔍</span><span>搜索...</span><kbd>⌘K</kbd></button>
+                <button class="bookmark-btn" onclick="toggleBookmark()" title="收藏页面">⭐</button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        <header class="header">
+            <h1>定时任务</h1>
+            <p class="subtitle">任务计划 · 执行记录 · 运行日志</p>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="app.refreshAll()">刷新</button>
+            </div>
+        </header>
+
+        <div class="tasks-summary">
+            <div class="task-stat"><div class="task-stat-value" id="totalTasks">-</div><div class="task-stat-label">总任务数</div></div>
+            <div class="task-stat"><div class="task-stat-value accent-green" id="activeTasks">-</div><div class="task-stat-label">运行中</div></div>
+            <div class="task-stat"><div class="task-stat-value accent-orange" id="todayExec">-</div><div class="task-stat-label">今日执行</div></div>
+            <div class="task-stat"><div class="task-stat-value accent-red" id="failedTasks">-</div><div class="task-stat-label">失败</div></div>
+        </div>
+
+        <div class="tasks-table-wrapper">
+            <table class="tasks-table">
+                <thead><tr>
+                    <th style="width:50px;text-align:center">#</th>
+                    <th>任务名称</th><th>Cron 表达式</th><th>执行频率</th><th>下次运行</th><th>上次运行</th><th>最后状态</th>
+                </tr></thead>
+                <tbody id="tasksBody">
+                    <tr><td colspan="7" class="empty-state">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="taskDetailModal" class="modal-overlay"></div>
+    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
+
+    <script src="sample-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

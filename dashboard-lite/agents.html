@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队与角色 - Hermes Dashboard Lite (Demo)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/transitions.css">
+    <style>
+        html, body { margin: 0; padding: 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; }
+        .top-navbar { background: rgba(15, 23, 42, 0.95); }
+        .nav-item.active { color: #ffffff !important; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+
+        .agents-page { padding-bottom: 60px; }
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 32px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 20px; text-align: center; transition: all 0.2s; backdrop-filter: blur(6px); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .stat-card .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .stat-card .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .team-block { margin-bottom: 16px; border-radius: 16px; overflow: hidden; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(51, 65, 85, 0.6); backdrop-filter: blur(8px); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); transition: border-color 0.2s ease; }
+        .team-block:hover { border-color: rgba(51, 65, 85, 0.8); }
+        .team-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; cursor: pointer; user-select: none; transition: background 0.2s ease; }
+        .team-header:hover { background: rgba(51, 65, 85, 0.3); }
+        .team-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+        .team-icon.damo { background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.25)); }
+        .team-info { flex: 1; min-width: 0; }
+        .team-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .team-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 6px; background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .team-desc { font-size: 0.8rem; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+        .team-stats { display: flex; gap: 16px; flex-shrink: 0; }
+        .team-stat-item { text-align: center; min-width: 50px; }
+        .team-stat-item .val { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+        .team-stat-item .lbl { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .team-toggle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(51, 65, 85, 0.5); color: var(--text-secondary); transition: all 0.3s ease; flex-shrink: 0; }
+        .team-toggle svg { width: 14px; height: 14px; transition: transform 0.3s ease; }
+        .team-block.expanded .team-toggle { background: var(--primary-gradient); color: #fff; }
+        .team-block.expanded .team-toggle svg { transform: rotate(180deg); }
+        .team-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .team-block.expanded .team-content { max-height: 8000px; }
+        .team-content-inner { padding: 0 24px 24px; }
+        .team-memory-section { margin-bottom: 28px; padding: 20px 22px; background: rgba(30, 41, 59, 0.35); border: 1px solid rgba(51, 65, 85, 0.45); border-radius: 14px; backdrop-filter: blur(6px); }
+        .team-memory-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(51, 65, 85, 0.4); }
+        .team-memory-header .section-icon { width: 24px; height: 24px; border-radius: 6px; background: rgba(99,102,241,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
+        .team-memory-header h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin: 0; letter-spacing: 0.3px; }
+        .team-memory-header .mem-count { font-size: 0.65rem; padding: 2px 8px; border-radius: 8px; background: rgba(99,102,241,0.1); color: #818cf8; font-weight: 600; }
+        .team-memory-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+        .team-memory-item { padding: 12px 14px; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(51, 65, 85, 0.4); border-radius: 10px; transition: all 0.2s ease; }
+        .team-memory-item:hover { border-color: rgba(99, 102, 241, 0.25); background: rgba(15, 23, 42, 0.6); }
+        .team-memory-item .mem-title { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+        .team-memory-item .mem-summary { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+        .roles-section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(51, 65, 85, 0.4); }
+        .roles-section-title .section-icon { width: 24px; height: 24px; border-radius: 6px; background: rgba(16,185,129,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
+        .roles-section-title h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin: 0; letter-spacing: 0.3px; }
+        .roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .role-card { position: relative; background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(51, 65, 85, 0.5); border-radius: 12px; padding: 16px 18px; transition: all 0.25s ease; backdrop-filter: blur(6px); cursor: pointer; }
+        .role-card.has-memory { border-color: rgba(16, 185, 129, 0.2); }
+        .role-card.empty { border-style: dashed; border-color: rgba(51, 65, 85, 0.35); background: rgba(30, 41, 59, 0.2); }
+        .role-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); }
+        .role-health-tags { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 6px; }
+        .health-tag { font-size:0.64rem; padding:2px 7px; border-radius:999px; border:1px solid rgba(148,163,184,.25); color:var(--text-secondary); background:rgba(148,163,184,.08); }
+        .health-tag.ok { color:#34d399; border-color:rgba(52,211,153,.35); background:rgba(16,185,129,.10); }
+        .health-tag.warn { color:#fbbf24; border-color:rgba(251,191,36,.35); background:rgba(245,158,11,.10); }
+        .role-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .role-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+        .role-icon.pm { background: rgba(99,102,241,0.15); }
+        .role-icon.dev { background: rgba(16,185,129,0.15); }
+        .role-icon.test { background: rgba(245,158,11,0.15); }
+        .role-icon.ops { background: rgba(6,182,212,0.15); }
+        .role-icon.data { background: rgba(139,92,246,0.15); }
+        .role-name { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+        .role-file-count { font-size: 0.6rem; padding: 1px 6px; border-radius: 6px; background: rgba(16,185,129,0.1); color: #34d399; font-weight: 600; }
+        .role-summary { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.55; }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon">🚀</span><span class="logo-text">Hermes</span><span class="version">v3.0 · public demo</span>
+            </a>
+            <div class="navbar-menu">
+                <a href="index.html" class="nav-item"><span class="icon">&#x1F5A5;</span><span>端口状态</span></a>
+                <a href="agents.html" class="nav-item active"><span class="icon">&#x1F916;</span><span>Agent</span></a>
+                <a href="tasks.html" class="nav-item"><span class="icon">&#x23F0;</span><span>定时任务</span></a>
+                <a href="skills.html" class="nav-item"><span class="icon">&#x26A1;</span><span>技能</span></a>
+                <a href="pipeline.html" class="nav-item"><span class="icon">&#x1F9ED;</span><span>流水线</span></a>
+                <a href="token.html" class="nav-item"><span class="icon">&#x1FA99;</span><span>Token</span></a>
+                <a href="memory.html" class="nav-item"><span class="icon">&#x1F9E0;</span><span>记忆图谱</span></a>
+            </div>
+            <div class="navbar-actions">
+                <button class="search-trigger" onclick="alert('🔒 Demo 模式')"><span>🔍</span><span>搜索...</span><kbd>⌘K</kbd></button>
+                <button class="bookmark-btn" onclick="toggleBookmark()" title="收藏页面">⭐</button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        <header class="header">
+            <h1>团队与角色</h1>
+            <p class="subtitle">Agent 架构 · 团队记忆 · 角色档案</p>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="app.refreshAll()">刷新</button>
+            </div>
+        </header>
+
+        <div class="overview-grid" id="agentsStats"></div>
+        <div id="agentsContainer" class="agents-page"></div>
+    </div>
+
+    <div class="toast" id="toast"><span class="toast-message" id="toastMessage"></span></div>
+
+    <script src="sample-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
