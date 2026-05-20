@@ -1,0 +1,52 @@
+# Secrets and credentials
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.crt
+*token*
+*secret*
+*credential*
+*cookie*
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Runtime data
+logs/
+sessions/
+backups/
+release-candidates/
+delivery-message*
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build artifacts
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Private project files (prevent accidental inclusion)
+private/
+secrets/
+credentials/
